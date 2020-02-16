@@ -1,0 +1,129 @@
+.content {
+    width: 760px;
+    display: block;
+    min-height: 60%;
+    margin: 20px auto 50px;
+    padding: 50px;
+    position: relative;
+}
+
+.search-bar {
+    width: 760px;
+    display: block;
+    margin: 50px auto 0;
+    padding: 10px;
+}
+
+.note {
+    font-family: sans-serif;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+}
+
+.page, .start, .end {
+    width: 50px;
+    height: 50px;
+    color: #000;
+    font-weight: 600;
+    display: inline-block;
+    text-align: center;
+    line-height: 50px;
+    transition: all 0.3s;
+}
+
+.start {
+    width: 100px;
+}
+
+.end {
+    width: 100px;
+}
+
+.pages {
+    display: block;
+    text-align: center;
+    margin: 50px auto 0;
+}
+
+.page:hover, .start:hover, .end:hover {
+    color: #fff;
+    background-color: #F44336;
+}
+
+.visit {
+    color: #fff;
+    background-color: #F44336;
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: none;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+}
+
+.search-bar {
+    position: relative;
+}
+
+.search-icon {
+    position: absolute;
+    right: 50px;
+    top: 14px;
+    line-height: 32px;
+}
+
+input[type=text]:not(.browser-default) {
+    border: none;
+    margin: 0;
+    height: 32px;
+    padding: 0 40px 0 50px;
+    box-sizing: border-box;
+}
+
+.add-note {
+    margin: 50px auto 50px;
+}
+
+.note-textarea {
+    border: none;
+    margin: 20px auto 20px;
+    padding: 0 40px 0 50px;
+    box-sizing: border-box;
+    height: 100px;
+    resize: none;
+    overflow: hidden;
+    outline: none;
+}
+
+.add {
+    background-color: #F44336;
+    color: #fff;
+    font-weight: 600;
+    outline: none;
+    margin-left: auto;
+    display: block;
+    margin-right: 0;
+    border: none;
+    padding: 10px 40px;
+}
+
+.create {
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+}
+
+.btn-floating.btn-large {
+    width: 50px;
+    height: 50px;
+    background-color: #F44336;
+    padding: 0;
+}
+
+.btn-floating.btn-large i {
+    line-height: 50px;
+}
+
+.create-btn {
+    height: 50px;
+}
