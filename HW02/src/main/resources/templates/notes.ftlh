@@ -11,10 +11,21 @@
     <title>Document</title>
 </head>
 <body>
-<div class="search-bar z-depth-3    ">
-    <input type="text" class="search-input" placeholder="Search.." id="query"><i class="material-icons search-icon"
-                                                                                 id="search">search</i>
+<div class="search-bar z-depth-3">
+    <form method="get" action="/notes">
+        <input type="text" value="${name}" name="name" class="search-input" placeholder="Search.." id="query">
+        <button class="search-icon"><i class="material-icons" id="search">search</i></button>
+    </form>
 </div>
+<script>
+    var query = document.getElementById("query");
+    var search = document.getElementById("search");
+    search.addEventListener("click", function (ev) {
+        if (query.value !== undefined || query.value.length !== 0) {
+            window.location.href = "http://localhost:8080/notes?name=" + query.value;
+        }
+    });
+</script>
 <div class="content z-depth-3">
     <#list notes as note>
         <div class="note">
@@ -22,30 +33,25 @@
             <div>Note: ${note.text}</div>
         </div>
     </#list>
-    <div class="pages">
-        <#assign x=lastPage>
-        <#if (totalPage > 4 && startPage > 1)>
-        <a href="/notes?name=${name}" class="start">Начало</a>
+    <div class="footer">
+        <#if (totalPage != 0)>
+            <div class="pages">
+            <#assign x=lastPage>
+            <#if (totalPage > 4 && startPage > 1)>
+            <a href="/notes?name=${name}" class="start">Начало</a>
+            </#if>
+            <#list startPage..x as i>
+                <a href="/notes/page/${i}?name=${name}" class="page <#if page == i>visit</#if>">${i}</a>
+            </#list>
+            <#if (totalPage > 4 && lastPage < totalPage)>
+            <a href="/notes/page/${totalPage}?name=${name}" class="end">Конец</a>
+            </#if>
+            </div>
+        <#else>
+            <div class="not-found">Not Found</div>
         </#if>
-        <#list startPage..x as i>
-            <a href="/notes/page/${i}?name=${name}" class="page <#if page == i>visit</#if>">${i}</a>
-        </#list>
-        <#if (totalPage > 4 && lastPage < totalPage)>
-        <a href="/notes/page/${totalPage}?name=${name}" class="end">Конец</a>
-        </#if>
+        <a class="btn-floating btn-large pulse create" href="/note/add"><i class="material-icons create-btn">add</i></a>
     </div>
-    <a class="btn-floating btn-large pulse create" href="/note/add"><i class="material-icons create-btn">add</i></a>
 </div>
-<script>
-    var query = document.getElementById("query");
-    var search = document.getElementById("search");
-    search.addEventListener("click", function (ev) {
-        var href = window.location.href;
-        href = href.substring(0, href.indexOf("?"));
-        if (query.value !== undefined || query.value.length !== 0) {
-            window.location.href = href + "?name=" + query.value;
-        }
-    });
-</script>
 </body>
 </html>

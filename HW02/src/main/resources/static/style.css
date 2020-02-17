@@ -42,7 +42,6 @@
 .pages {
     display: block;
     text-align: center;
-    margin: 50px auto 0;
 }
 
 .page:hover, .start:hover, .end:hover {
@@ -68,6 +67,9 @@ input[type=text]:not(.browser-default):focus:not([readonly]) {
 .search-icon {
     position: absolute;
     right: 50px;
+    background: transparent;
+    border: none;
+    outline: none;
     top: 14px;
     line-height: 32px;
 }
@@ -126,4 +128,15 @@ input[type=text]:not(.browser-default) {
 
 .create-btn {
     height: 50px;
+}
+
+.footer {
+    margin: 50px auto 0;
+    min-height: 50px;
+}
+
+.not-found {
+    line-height: 50px;
+    font-weight: 600;
+    font-size: 20px;
 }

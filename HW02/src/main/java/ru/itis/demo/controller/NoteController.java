@@ -26,8 +26,12 @@ public class NoteController {
     public String getNotes(@PathVariable int page, @RequestParam(name = "name", defaultValue = "") String name, Model model) {
         List<NoteDto> notes = name.equals("") ? this.notes :
                 this.notes.stream().filter(note -> note.getName().contains(name)).collect(Collectors.toList());
-
         int totalPage = (int) Math.ceil((float) notes.size() / RECORD_LIMIT);
+        if (totalPage < page) {
+            return "redirect:/notes/page/" + totalPage + "?name=" + name;
+        }
+        notes = notes.subList((page - 1) * RECORD_LIMIT,
+                notes.size() > page * RECORD_LIMIT ? page * RECORD_LIMIT : notes.size());
         if (page > 2) {
             if (totalPage - page < PAGE_LIMIT - 2) {
                 model.addAttribute("lastPage", totalPage);
@@ -43,13 +47,6 @@ public class NoteController {
         model.addAttribute("totalPage", totalPage);
         model.addAttribute("name", name);
         model.addAttribute("page", page);
-
-        if ((page - 1) * RECORD_LIMIT > notes.size()) {
-            notes = new ArrayList<>();
-        } else {
-            notes = notes.subList((page - 1) * RECORD_LIMIT,
-                    notes.size() >= page * RECORD_LIMIT ? page * RECORD_LIMIT : notes.size());
-        }
         model.addAttribute("notes", notes);
         return "notes";
     }
@@ -60,7 +57,8 @@ public class NoteController {
                 this.notes.stream().filter(note -> note.getName().contains(name))
                         .collect(Collectors.toList());
         int totalPage = (int) Math.ceil((float) notes.size() / RECORD_LIMIT);
-        model.addAttribute("notes", notes.subList(0, RECORD_LIMIT));
+        notes = notes.subList(0, notes.size() > RECORD_LIMIT ? RECORD_LIMIT : notes.size());
+        model.addAttribute("notes", notes);
         model.addAttribute("startPage", 1);
         model.addAttribute("name", name);
         model.addAttribute("page", 1);
