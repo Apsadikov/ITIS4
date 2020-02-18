@@ -1,37 +1,33 @@
 package ru.itis.demo.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.itis.demo.dto.NoteDto;
+import ru.itis.demo.model.Note;
+import ru.itis.demo.service.NoteService;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static ru.itis.demo.repository.NoteRepository.PAGE_LIMIT;
 
 @Controller
 public class NoteController {
-    private static final int RECORD_LIMIT = 6;
-    private static final int PAGE_LIMIT = 3;
-    private List<NoteDto> notes;
+    private NoteService noteService;
 
-    public NoteController() {
-        notes = new ArrayList<>();
-        for (int i = 0; i < 53; i++) {
-            notes.add(new NoteDto("user" + i, String.valueOf(i)));
-        }
+    @Autowired
+    public NoteController(NoteService noteService) {
+        this.noteService = noteService;
     }
 
     @RequestMapping(value = "/notes/page/{page:[\\d]+}", method = RequestMethod.GET)
     public String getNotes(@PathVariable int page, @RequestParam(name = "name", defaultValue = "") String name, Model model) {
-        List<NoteDto> notes = name.equals("") ? this.notes :
-                this.notes.stream().filter(note -> note.getName().contains(name)).collect(Collectors.toList());
-        int totalPage = (int) Math.ceil((float) notes.size() / RECORD_LIMIT);
+        int totalPage = name.equals("") ? noteService.totalPage() : noteService.totalPage(name);
         if (totalPage < page) {
             return "redirect:/notes/page/" + totalPage + "?name=" + name;
         }
-        notes = notes.subList((page - 1) * RECORD_LIMIT,
-                notes.size() > page * RECORD_LIMIT ? page * RECORD_LIMIT : notes.size());
+        List<Note> notes = name.equals("") ? noteService.pagination(page) : noteService.pagination(page, name);
         if (page > 2) {
             if (totalPage - page < PAGE_LIMIT - 2) {
                 model.addAttribute("lastPage", totalPage);
@@ -53,11 +49,8 @@ public class NoteController {
 
     @RequestMapping(value = "/notes", method = RequestMethod.GET)
     public String getNotes(@RequestParam(name = "name", defaultValue = "") String name, Model model) {
-        List<NoteDto> notes = name.equals("") ? this.notes :
-                this.notes.stream().filter(note -> note.getName().contains(name))
-                        .collect(Collectors.toList());
-        int totalPage = (int) Math.ceil((float) notes.size() / RECORD_LIMIT);
-        notes = notes.subList(0, notes.size() > RECORD_LIMIT ? RECORD_LIMIT : notes.size());
+        List<Note> notes = name.equals("") ? noteService.pagination(1) : noteService.pagination(1, name);
+        int totalPage = name.equals("") ? noteService.totalPage() : noteService.totalPage(name);
         model.addAttribute("notes", notes);
         model.addAttribute("startPage", 1);
         model.addAttribute("name", name);
@@ -74,7 +67,7 @@ public class NoteController {
 
     @PostMapping("/note/add")
     public String addNewNote(NoteDto noteDto) {
-        notes.add(0, noteDto);
+        noteService.addNote(noteDto);
         return "redirect:/notes";
     }
 }
